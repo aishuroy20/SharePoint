@@ -1,0 +1,69 @@
+ <script type="text/javascript" src="https://sharepointiq.sharepoint.com/sites/Dev/SiteAssets/js/jquery-1.9.1.min.js"></script>
+  <script type="text/javascript" src="https://sharepointiq.sharepoint.com/sites/Dev/SiteAssets/RESTCRUD/RESTCRUD.js"></script>
+ <script type="text/javascript">
+ $( document ).ready(function() {   
+   // alert(Read);
+   // alert(Read());
+    //console.log("ready!");
+    });
+ </script>
+<h1>SharePointIQ REST API's Example CRUD Operations</h1>   
+    <div>
+        <span>List Name</span>
+        <span>
+            <input type="text" id="listName" />
+        </span>
+    </div>
+    <h2>Create</h2>
+    <div>Enter some text in the field below and click create to create a new list item with the specified text as its title.</div>
+    <div>
+        <span>Title</span>
+        <span>
+            <input type="text" id="Create_Title" />
+        </span>      
+        <span>City</span>
+        <span>
+            <input type="text" id="Create_City" />
+        </span>
+        <span>Department</span>
+        <span>
+            <input type="text" id="Create_Department" />
+        </span>
+        <span>
+            <input type="button" id="Create_Submit" value="Create" onclick="Create();" />
+        </span>
+    </div>
+    <h2>Read</h2>
+    <div>Click the button bellow to populate the list boxes on this page. You will need to read the items in the list before you can update or delete items</div>
+    <span>
+        <input type="button" id="Read_Buton" class="ReadButton" value="Read" onclick="Read();" /></span>
+    <h2>Update</h2>
+    <div>Select the item you wan to update from the list below and enter a new title. Then click update to update the item and refresh the list of available items</div>
+    <span>
+        <select id="UpdateItems" onchange="UpdateSelectedItemChanged()" />
+    </span> 
+
+    <span>
+        <input type="button" id="UpdateSubmit" value="Update" onclick="Update();" />
+    </span>
+        <div>
+    <span>Title</span>
+    <span>
+        <input type="text" id="UpdateTitle" />
+    </span>
+    
+     <span>City</span>
+    <span>
+        <input type="text" id="UpdateCity" />
+    </span>
+     <span>Department</span>
+    <span>
+        <input type="text" id="UpdateDept" />
+    </span>
+        </div>
+    <h2>Delete</h2>
+    <div>Select the item you want to delete from the list below and then click delete to delete the item and refresh the list of available items</div>
+    <span>
+        <select id="DeleteItems" /></span>
+    <span>
+        <input type="button" id="DeleteSubmit" value="Delete" onclick="Delete();" /></span>
