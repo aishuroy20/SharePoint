@@ -1,0 +1,44 @@
+<script src="https://tllm1.sharepoint.com/sites/skytraining/SiteAssets/JS/jquery2.js"></script>
+<script src="https://tllm1.sharepoint.com/sites/skytraining/SiteAssets/EmpApp/Emp.js"></script>
+
+<table id="filtertable">
+    <tr>
+        <td><select id="title" ><option>Filter Title</option></select></td>
+        <td><select id="city" ><option>Filter City</option></select></td>
+        <td><select id="dep" ><option>Filter Department</option></select></td>
+
+    </tr>
+
+    
+</table>
+
+
+<table id="table2"   border="2px">
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>City</th>
+        <th>Department</th>
+    </tr>
+     </thead>
+     <tbody id="employeeTbale">
+     </tbody>
+
+</table>
+
+<style>
+    #table2{
+      
+        width:320px;
+        margin-top:20px";
+
+    }
+
+    #table2 th{
+        background-color:pink;
+        } 
+
+        #filtertable select{
+            width:104px;
+            }
+    </style>
