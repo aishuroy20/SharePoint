@@ -1,0 +1,309 @@
+
+function Create() {
+    debugger;
+    var url = _spPageContextInfo.siteAbsoluteUrl;
+    var listName = $('#listName').val();
+    var title = $('#Create_Title').val();
+    var city = $('#Create_City').val();
+    var department = $('#Create_Department').val();
+    var dob=$('#Create_DOB').val();
+    
+    createListItemWithDetails(listName, url, title,city,department,dob, function (data) {
+        alert("Item has been created. Updating available items");
+        Read();
+    }, function (data) {
+        console.log(JSON.stringify(data));
+        alert("Ooops, an error occured. Please try again");
+    });
+}
+
+function createListItemWithDetails(listName, url, title,city,department,dob, success, failure) {
+
+    var itemType = GetItemTypeForListName(listName);
+    var item = {
+        "__metadata": { "type": itemType },
+        "Title": title,
+        "City": city,
+        "Department":department,
+        "DOB":dob
+    };
+    var listUrl=url + "/_api/web/lists/getbytitle('" + listName + "')/items"
+
+    $.ajax({
+        url: listUrl,
+        type: "POST",
+        contentType: "application/json;odata=verbose",
+        data: JSON.stringify(item),
+        headers: {
+            "Accept": "application/json;odata=verbose",
+            "X-RequestDigest": getFormDigest()
+        },
+        success: function (data) {
+            success(data);
+        },
+        error: function (data) {
+            failure(data);
+        }
+    });
+}
+
+function getFormDigest() {
+    var fd="";
+    $.ajax({
+        url: _spPageContextInfo.siteAbsoluteUrl + "/_api/contextinfo",
+        method: "POST",
+        async: false,
+        headers: { "Accept": "application/json; odata=verbose" },
+        success: function(data){
+           fd= data.d.GetContextWebInformation.FormDigestValue;
+        }
+    });   
+    return fd;
+}
+
+
+function GetItemTypeForListName(name) {
+    name=name.trim();
+    // inSpc= name.indexOf(" ");
+    // name= name.slice(0,inSpc)+name.slice(inSpc+1);
+    return "SP.Data." + name.charAt(0).toUpperCase() + name.slice(1) + "ListItem";   
+}
+
+
+function Read() {
+    debugger;
+    var listName = $('#listName').val();
+    var url = _spPageContextInfo.siteAbsoluteUrl;
+
+    //clear both text boxes 
+    $('#UpdateTitle').val('');
+    $('#Create_Title').val('');    
+
+    getListItems(listName, url, function (data) {
+        var items = data.d.results;
+        //console.log(JSON.stringify(items) );
+        // remove all of the previous items
+        $('#UpdateItems option').each(function (index, option) { $(option).remove(); });
+        $('#DeleteItems option').each(function (index, option) { $(option).remove(); });
+        
+
+        // Add all the new items
+        for (var i = 0; i < items.length; i++) {
+            $('#UpdateItems').append(new Option(items[i].Title, items[i].Id, false, false));
+            $('#DeleteItems').append(new Option(items[i].Title, items[i].Id, false, false));
+        }
+    }, function (data) {
+        console.log(JSON.stringify(data));
+        alert("Ooops, an error occured. Please try again");
+    });
+}
+
+function getListItems(listName, siteurl, success, failure) {
+    var listUrl=siteurl + "/_api/web/lists/getbytitle('" + listName + "')/items";
+    $.ajax({
+        url: listUrl, //total item count 100, max. lim. 5000
+        method: "GET",
+        headers: { "Accept": "application/json; odata=verbose" },
+        success: function (data) {
+            success(data);
+        },
+        error: function (data) {
+            failure(data);
+        }
+    });
+}
+
+ function UpdateSelectedItemChanged() {
+    debugger;
+    $('#UpdateTitle').val($('#UpdateItems :selected').text());
+    var url = _spPageContextInfo.siteAbsoluteUrl;
+    var listName = $('#listName').val();    
+    var itemId = $('#UpdateItems').val();
+    var listUrl = url + "/_api/web/lists/getbytitle('" + listName + "')/items(" + itemId + ")";
+    
+    $.ajax({
+        url: listUrl,
+        method: "GET",
+        headers: { "Accept": "application/json; odata=verbose" },
+        success: function (data) {
+            var item = data.d;
+            $('#UpdateTitle').val(item.Title);
+            $('#UpdateCity').val(item.City);
+            $('#UpdateDept').val(item.Department);
+             $('#UpdateDob').val(item.DOB);
+        },
+        error: function (data) {
+            alert("Unable to get item by ID");
+        }
+    });
+}
+
+ function Update() {
+    debugger;
+    var url = _spPageContextInfo.siteAbsoluteUrl;
+    var listName = $('#listName').val();    
+    var itemId = $('#UpdateItems').val();
+    var title = $('#UpdateTitle').val();
+    var city = $('#UpdateCity').val();
+    var dept = $('#UpdateDept').val();
+    var dob = $("#UpdateDob").val();
+    
+    updateListItem(itemId, listName, url, title, city, dept, dob,
+        function () {
+            alert("Item updated, refreshing available items");
+            Read(); // You may need to define your Read function for refreshing the list
+        }, 
+        function () {
+            alert("Oops, an error occurred. Please try again");
+        }
+    );
+}
+
+
+ function updateListItem(itemId, listName, siteUrl, title, city, dept,dob, success, error) {
+    var itemUrl = siteUrl + "/_api/web/lists/getbytitle('" + listName + "')/items(" + itemId + ")";
+    
+    var itemData = {
+        __metadata: { 'type': 'SP.Data.' + listName + 'ListItem' },
+        Title: title,
+        City: city,
+        Department: dept,
+        DOB:dob
+    };
+    
+    $.ajax({
+        url: itemUrl,
+        type: "POST",
+        contentType: "application/json;odata=verbose",
+        data: JSON.stringify(itemData),
+        headers: {
+            "Accept": "application/json;odata=verbose",
+            "X-HTTP-Method": "MERGE",
+            "IF-MATCH": "*",
+            "X-RequestDigest":getFormDigest()
+        },
+        success: function (data) {
+            success();
+        },
+        error: function (data) {
+            error();
+            console.log(data);
+        }
+    });
+}
+
+
+function getListItemWithId(itemId, listName, siteurl, success, failure) {
+    var url = siteurl + "/_api/web/lists/getbytitle('" + listName + "')/items?$filter=Id eq " + itemId;
+    $.ajax({
+        url: url,
+        method: "GET",
+        headers: { "Accept": "application/json; odata=verbose" },
+        success: function (data) {
+            if (data.d.results.length == 1) {
+                success(data.d.results[0]);
+            }
+            else {
+                failure("Multiple results obtained for the specified Id value");
+            }
+        },
+        error: function (data) {
+            failure(data);
+        }
+    });
+}
+
+function Delete() {
+    debugger;
+    alert("Ankit");
+    var url = _spPageContextInfo.siteAbsoluteUrl;
+    var listName = $('#listName').val(); // Assuming you have a variable named listName
+
+    // Retrieve the selected item ID
+    var itemId = $('#DeleteItems').val();
+
+    // Get the request digest value from the page
+    var requestDigest = $('#__REQUESTDIGEST').val();
+
+    // Construct the URL for deleting the item
+    var itemUrl = url + "/_api/web/lists/getbytitle('" + listName + "')/items(" + itemId + ")";
+
+    // Make an AJAX call to delete the item
+    $.ajax({
+        url: itemUrl,
+        type: "POST",
+        contentType: "application/json;odata=verbose",
+        headers: {
+            "Accept": "application/json;odata=verbose",
+            "X-HTTP-Method": "DELETE",
+            "IF-MATCH": "*",
+            "X-RequestDigest": getFormDigests() // Corrected function name
+        },
+        success: function (data) {
+            // Item deleted successfully, perform any additional actions if needed
+            alert("Item deleted successfully");
+            // Optionally, refresh the list or perform any other actions after deletion
+            // For example, you may call a function to refresh the list items
+            RefreshItemList();
+        },
+        error: function (error) {
+            // Error occurred during deletion, handle the error
+            alert("Error deleting item");
+            console.log(JSON.stringify(error));
+        }
+    });
+}
+
+
+function getFormDigests() {
+    var formDigestValue = "";
+    $.ajax({
+        url: _spPageContextInfo.siteAbsoluteUrl + "/_api/contextinfo",
+        method: "POST",
+        async: false,
+        headers: { "Accept": "application/json; odata=verbose" },
+        success: function(data) {
+            formDigestValue = data.d.GetContextWebInformation.FormDigestValue;
+        },
+        error: function(xhr, textStatus, errorThrown) {
+            console.log("Error getting form digest: " + errorThrown);
+        }
+    });   
+    return formDigestValue;
+}
+
+
+function Read() {
+    debugger;
+            $.ajax({
+                url: _spPageContextInfo.siteAbsoluteUrl + "/_api/web/lists/getbytitle('Addupdate')/items",
+                method: "GET",
+                headers: { "Accept": "application/json; odata=verbose" },
+                success: function (data) {
+                    var txt = "";
+                    var items = data.d.results;
+                    for (var i = 0; i < items.length; i++) {
+                        txt += "<tr><td>" + items[i].Title + "</td><td>" + items[i].City + "</td><td>" + items[i].Department + "</td><td>" + formatDate(items[i].DOB )+"</td><td>"+items[i].Age+ "</td></tr>";
+                    }
+                    $('#tblid tbody').html(txt);
+                },
+                error: function (data) {
+                    alert(JSON.stringify(data));
+                }
+            });
+        }
+
+
+        function formatDate(dateString) {
+    if (!dateString) return ""; 
+    var date = new Date(dateString);
+  
+   // var formattedDate = (Number(date.getMonth())+1) + '/' +date.getDate()+ '/' + date.getFullYear();
+    var formattedDate = (date.getDate() + '-' +(Number(date.getMonth())+1) + '-' +date.getFullYear()) ;
+    return formattedDate;
+}
+
+
+
+
+     
