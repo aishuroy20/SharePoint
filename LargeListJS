@@ -1,0 +1,58 @@
+$(document).ready(function(){
+    Read();
+})
+
+function Read(){
+    var empty="";
+  
+     
+    $.ajax({  
+  
+        url: _spPageContextInfo.siteAbsoluteUrl + "/_api/web/lists/GetByTitle('largelist')/items?$top= 5000",   
+        method: "GET",  
+  
+        headers: {  
+            "accept": "application/json;odata=verbose",   
+          
+  
+        },  
+        success: function(data) {  
+           var items= data.d.results;  
+          
+           for(var i=0;i<items.length;i++){ 
+  
+                empty += "<tr><td>" + items[i].Title+"</td></tr>";  
+                
+  
+           }
+  
+         $('#tblid tbody').html(empty);  
+        },  
+        error: function(data) {  
+            console.log(JSON.stringify(data));  
+  
+        }  
+  
+    })  
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       
+  
+
+
