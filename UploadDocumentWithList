@@ -1,0 +1,68 @@
+<script src="https://tllm1.sharepoint.com/sites/skytraining/SiteAssets/Document_Upload_WithList/JS/jquery2.js"></script>
+<script src="https://tllm1.sharepoint.com/sites/skytraining/SiteAssets/Document_Upload_WithList/HTML/uploaddocumentlist.js"></script>
+
+
+
+<div>
+    <p>List Name: <input id="listName" type="text" /></p>
+    <p>Item ID: <input id="itemId" type="text" /></p>
+    <p>Choose File: <input type="file" id="fileInput" /></p>
+    <p><button onclick="addAttachment()">Add Attachment</button></p>
+</div>
+
+<script>
+function addAttachment() {
+    var listName = $('#listName').val();
+    var itemId = $('#itemId').val();
+    var fileInput = $('#fileInput')[0].files[0];
+    
+    if (!listName || !itemId || !fileInput) {
+        alert("Please fill in all fields.");
+        return;
+    }
+    
+    var endpointUrl = _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getbytitle('" + listName + "')/items(" + itemId + ")/AttachmentFiles/add(FileName='" + fileInput.name + "')";
+    
+    getFormDigest().then(function(formDigest) {
+        var fileData = fileInput;
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', endpointUrl, true);
+        xhr.setRequestHeader("Accept", "application/json;odata=verbose");
+        xhr.setRequestHeader("X-RequestDigest", formDigest);
+        xhr.setRequestHeader("Content-Type", fileInput.type);
+        
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                alert("Attachment added successfully.");
+            } else {
+                alert("Error adding attachment: " + xhr.responseText);
+            }
+        };
+        
+        xhr.onerror = function () {
+            alert("Error adding attachment: " + xhr.statusText);
+        };
+        
+        xhr.send(fileData);
+    }).catch(function(error) {
+        console.error("Error getting form digest: " + error);
+    });
+}
+
+function getFormDigest() {
+    return new Promise(function(resolve, reject) {
+        $.ajax({
+            url: _spPageContextInfo.webAbsoluteUrl + "/_api/contextinfo",
+            method: "POST",
+            headers: { "Accept": "application/json;odata=verbose" },
+            success: function(data){
+                var formDigest = data.d.GetContextWebInformation.FormDigestValue;
+                resolve(formDigest);
+            },
+            error: function(error){
+                reject(error);
+            }
+        });
+    });
+}
+</script>
