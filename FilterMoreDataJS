@@ -1,0 +1,31 @@
+function Read() {
+
+    debugger;
+    var odataVal = "";
+    var apiUrl = _spPageContextInfo.siteAbsoluteUrl + "/_api/web/lists/getbytitle('filtermoredata1')/items?$filter=ID gt 0";
+    
+    odataVal += ($("#title").val() == "0" ? "" : " and Title eq '" + $("#title").val() + "'");
+    odataVal += ($("#name").val() == "0"  ? "" : " and Name eq '" + $("#name").val() + "'");
+    odataVal += ($("#department").val() == "0"  ? "" : " and Department eq '" + $("#department").val() + "'");
+    odataVal += ($("#city").val() == "0"  ? "" : " and City eq '" + $("#city").val() + "'");
+    odataVal += ($("#country").val() == "0"  ? "" : " and Country eq '" + $("#country").val() + "'");
+    odataVal += ($("#state").val() == "0"  ? "" : " and State eq '" + $("#state").val() + "'");
+    
+    $('#tblEmployee tr:not(:first)').remove();
+    $.ajax({
+        url: apiUrl + odataVal,
+        method: "GET",
+        headers: { "Accept": "application/json;odata=verbose" },
+        success: function (data) {
+            var items = data.d.results;
+            for (var i = 0; i < items.length; i++) {
+                $("#tblEmployee").append("<tr><td>" + items[i].Title + "</td><td>" + items[i].Name + "</td><td>" + items[i].Department + "</td><td>" + items[i].City + "</td><td>" + items[i].Country + "</td><td>" + items[i].State + "</td><td>" + items[i].ID + "</td></tr>");
+            }
+        },
+        error: function (data) {
+            alert(JSON.stringify(data));
+        }
+    });
+}
+
+Read();
