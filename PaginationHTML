@@ -1,0 +1,17 @@
+<link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css"/>
+<script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
+<script type="text/javascript" src="https://tllm1.sharepoint.com/sites/skytraining/SiteAssets/Pagination/HTML/pagination.js"></script>
+
+<table id="tab" border="1">
+     <thead>
+        <tr>
+           
+            <th>Title</th>
+            <th>City</th>
+            <th>Category</th>
+            <th>Quantity</th>
+            <th>Mode</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
