@@ -1,0 +1,11 @@
+<script src="https://tllm1.sharepoint.com/sites/skytraining/SiteAssets/DocumentLib/JS/jquery2.js"></script>
+<script src="https://tllm1.sharepoint.com/sites/skytraining/SiteAssets/DocumentLib/HTML/upload.js"></script>
+
+
+<div style="margin-top: 10%;">  
+   <input id = "attachment" type = "file" multiple accept = ".DOCX,.docx,.txt,.TXT,.PDF,.pdf" />  
+   <br/>  
+   <div>  
+       <button  id = "addFileButton" type = "button" class="btn btn-primary" onclick = "uploadDocument()">Upload</button>  
+   </div>  
+ </div>  
