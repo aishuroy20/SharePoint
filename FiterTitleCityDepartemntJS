@@ -1,0 +1,37 @@
+function Read() {
+    debugger;
+
+    var url1 = _spPageContextInfo.siteAbsoluteUrl + "/_api/web/lists/GetByTitle('Employee')/items";
+    var endpoint = "";
+
+    $('#tblEmployee tr').each(function (index, item) {
+        if (index > 0) {
+            $(this).remove();
+        }
+
+        if ($("#city").val() !== "0" && $("#department").val() !== "0") {
+            endpoint = "?$filter=City eq '" + $("#city").val() + "' and Department eq '" + $("#department").val() + "'";
+        } else if ($("#city").val() === "0" && $("#department").val() !== "0") {
+            endpoint = "?$filter=Department eq '" + $("#department").val() + "'";
+        } else if ($("#city").val() !== "0" && $("#department").val() === "0") {
+            endpoint = "?$filter=City eq '" + $("#city").val() + "'";
+        }
+    });
+
+    $.ajax({
+        url: url1 + endpoint,
+        method: "GET",
+        headers: { "Accept": "application/json;odata=verbose" },
+        success: function (data) {
+            var items = data.d.results;
+            for (var i = 0; i < items.length; i++) {
+                $("#tblEmployee tr:last").after("<tr><td>" + items[i].Title + "</td><td>" + items[i].City + "</td><td>" + items[i].Department + "</td></tr>");
+            }
+        },
+        error: function (data) {
+            alert(JSON.stringify(data));
+        }
+    });
+}
+
+Read();
