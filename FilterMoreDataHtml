@@ -1,0 +1,73 @@
+<script src="https://tllm1.sharepoint.com/sites/skytraining/SiteAssets/FilterMoreFilelds/JS/jquery2.js"></script>
+<script src="https://tllm1.sharepoint.com/sites/skytraining/SiteAssets/FilterMoreFilelds/filtermorefields.js"></script>
+
+
+
+     <input type="button" onclick="Read()" value="Click Me">
+
+
+
+<table id="tblEmployee">
+    <thead>
+        
+    <tr>
+        
+
+         <th><select id="title">
+        <option value="0">Filter Title</option>
+        <option>Mr</option>
+        <option>Mrs</option>
+        <option>Others</option>
+         
+        </select></th>
+
+        <th><select id="name">
+        <option value="0">Filter Name</option>
+        <option>Nilesh</option>
+        <option>Alok</option>
+        <option>Chaya</option>
+         <option>Payal</option>
+        </select></th>
+        
+        <th><select id="department">
+        <option value="0">Filter Department</option>
+        <option>IT</option>
+        <option>Mecha</option>
+        <option>Civil</option>
+        <option>Civil</option>
+
+     </select></th>
+
+       <th><select id="city">
+        <option value="0">Filter City</option>
+        <option>Muzaffarpur</option>
+        <option>Patna</option>
+        <option>Delhi</option>
+         <option>Gaziyabaad</option>
+        </select></th>
+
+          <th><select id="country">
+        <option value="0">Filter Country</option>
+        <option>India</option>
+        <option>Cambodia</option>
+        <option>Cameroon</option>
+         <option>South-East Asia</option>
+        </select></th>
+
+        <th><select id="state">
+        <option value="0">Filter State</option>
+        <option>Andhra Pradesh</option>
+        <option>Arunachal Pradesh</option>
+        <option>Assam</option>
+         <option>Chhattisgarh</option>
+        </select></th>
+
+        <select>
+        <th id="id">ID</th>
+        </select>
+    </tr>
+    </thead>
+
+    
+
+</table>
