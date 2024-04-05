@@ -1,0 +1,389 @@
+function Create() {
+    debugger;
+    var url = _spPageContextInfo.siteAbsoluteUrl;
+    var listName = $('#listName').val();
+    var title = $('#sName').val();
+    var dob=$('#sdob').val();
+    var doj=$('#sdoj').val();
+
+     var skills = [];
+    var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+    checkboxes.forEach(function(checkbox) {
+        skills.push(checkbox.value);
+    });
+   
+    
+    createListItemWithDetails(listName, url, title,dob,doj,skills, function (data){
+        alert("Item has been created. Updating available items");
+        Read();
+    }, function (data) {
+        console.log(JSON.stringify(data));
+        alert("Ooops, an error occured. Please try again");
+    });
+ }
+
+function createListItemWithDetails(listName, url, title,dob,doj,skills,success, failure) {
+
+    var itemType = GetItemTypeForListName(listName);
+    var item = {
+        "__metadata": { "type": itemType },
+        "Title": title,
+        "DOB":dob,
+        "DOJ":doj,
+        "Skill": { "results": skills }
+        
+    };
+    var listUrl=url + "/_api/web/lists/getbytitle('" + listName + "')/items"
+
+    $.ajax({
+        url: listUrl,
+        type: "POST",
+        contentType: "application/json;odata=verbose",
+        data: JSON.stringify(item),
+        headers: {
+            "Accept": "application/json;odata=verbose",
+            "X-RequestDigest": getFormDigest()
+        },
+        success: function (data) {
+            success(data);
+        },
+        error: function (data) {
+            failure(data);
+        }
+    });
+}
+
+function getFormDigest() {
+    var fd="";
+    $.ajax({
+        url: _spPageContextInfo.siteAbsoluteUrl + "/_api/contextinfo",
+        method: "POST",
+        async: false,
+        headers: { "Accept": "application/json; odata=verbose" },
+        success: function(data){
+           fd= data.d.GetContextWebInformation.FormDigestValue;
+        }
+    });   
+    return fd;
+}
+
+
+function GetItemTypeForListName(name) {
+    name=name.trim();
+    // inSpc= name.indexOf(" ");
+    // name= name.slice(0,inSpc)+name.slice(inSpc+1);
+    return "SP.Data." + name.charAt(0).toUpperCase() + name.slice(1) + "ListItem";   
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// var itemIds="";
+// var status ="";
+
+// function Create() {
+//     debugger;
+//     var url = _spPageContextInfo.siteAbsoluteUrl;
+//     var listName = $('#listName').val();
+//     var name = $('#sName').val();
+//     var dob = formatUTCDates($('#sdob').val());
+//     var doj = formatUTCDates($('#sdoj').val());
+//     var checkSkill = [];
+//     if($("#java").is(":checked")){
+//         checkSkill.push($("#java").val());
+//     }
+//      if($("#html").is(":checked")){
+//         checkSkill.push($("#html").val());
+//     }
+//      if($("#Javascript").is(":checked")){
+//         checkSkill.push($("#Javascript").val());
+//     }
+//      if($("#sharepoint").is(":checked")){
+//         checkSkill.push($("#sharepoint").val());
+//     }
+//     if($("#sql").is(":checked")){
+//         checkSkill.push($("#sql").val());
+//     }
+//      if($("#css").is(":checked")){
+//         checkSkill.push($("#css").val());
+//     }
+   
+//    var skills= {"__metadata":{"type":"Collection(Edm.String)"},"results":
+//    [check.join(',')]};
+   
+//     if(status==""){
+//     createListItemWithDetails(listName, url, name,dob,doj,checkSkill, function (data) {
+//         alert("Item has been created. Updating available items");
+       
+//         $('#sName').val("");
+//          $('#sdob').val("");
+//          $('#sdoj').val("");
+//          Read();
+//     }, function (data) {
+//         console.log(JSON.stringify(data));
+//         alert("Ooops, an error occured. Please try again");
+        
+//     });
+//     }
+
+//     else{
+//          updateListItem(itemIds, listName, url, name,dob,doj, function() {
+//     alert("Item updated, refreshing available items");
+//     status="";
+//            $('#sName').val("");
+//       $('#sdob').val("");
+//         $('#sdoj').val("");
+//         Read();
+        
+//     },
+//     function(){
+//         alert("Oops,an error occured, Please try again");
+//     });
+//     }
+// }
+
+// function createListItemWithDetails(listName, url,name,dob,doj,success, failure) {
+
+//     var itemType = GetItemTypeForListName(listName);
+//     var item = {
+//         "__metadata": { "type": itemType },
+//         "Title": name,
+//         "DOB": dob,
+//         "DOJ":doj
+        
+//     };
+//     var listUrl=url + "/_api/web/lists/getbytitle('" + listName + "')/items"
+
+//     $.ajax({
+//         url: listUrl,
+//         type: "POST",
+//         contentType: "application/json;odata=verbose",
+//         data: JSON.stringify(item),
+//         headers: {
+//             "Accept": "application/json;odata=verbose",
+//             "X-RequestDigest": getFormDigest()
+//         },
+//         success: function (data) {
+//             success(data);
+//         },
+//         error: function (data) {
+//             failure(data);
+//         }
+//     });
+// }
+
+// function getFormDigest() {
+//     var fd="";
+//     $.ajax({
+//         url: _spPageContextInfo.siteAbsoluteUrl + "/_api/contextinfo",
+//         method: "POST",
+//         async: false,
+//         headers: { "Accept": "application/json; odata=verbose" },
+//         success: function(data){
+//            fd= data.d.GetContextWebInformation.FormDigestValue;
+//         }
+//     });   
+//     return fd;
+// }
+
+
+// function GetItemTypeForListName(name) {
+//     name=name.trim() ;
+//     // inSpc= name.indexOf(" ");
+//     // name= name.slice(0,inSpc)+name.slice(inSpc+1);
+//     return "SP.Data." + name.charAt(0).toUpperCase() + name.slice(1) + "ListItem";   
+// }
+
+
+
+
+
+// function Read(){   
+  
+// var empty="";
+//     $.ajax({
+//         url:  _spPageContextInfo.siteAbsoluteUrl + "/_api/web/lists/getbytitle('Employee')/items?$select= Title,DOB,Age,DOJ,Skill,Department/Title,Attachments,City/Title,City/State,City/Country,User,Manager/Title,User/Title,User/EMail&$expand=City,User,Manager,Department",
+//         method: "GET",
+//         headers: { "Accept": "application/json;odata=verbose"},
+//         success: function (data) {
+//             var items = data.d.results;
+              
+//              for (var i = 0; i < items.length; i++){
+//  empty+= "<tr><td style='display:none'>" + items[i].ID + "</td><td>" + items[i].Title + "</td><td>" + formatDate(items[i].DOB )+ "</td><td>" + items[i].Age +"</td><td>" + formatDate(items[i].DOJ )+"</td><td>"+(items[i].User ? items[i].User.Title : "")+"</td><td>"+items[i].Manager.Title+"</td><td>"+items[i].Skill.results.toString()+"</td><td>"+items[i].City.Title + "</td><td>" +items[i].City.State+ "</td><td>" +items[i].City.Country +"</td><td>"+items[i].Department.Title+"</td><td>"+items[i].Attachments+"</td><td>"+"<input type='button' value='Edit' onclick='editData(this)'>"+ "</td><td>"+"<input type='button' value='Delete' onclick='DeleteData(this)'>"+ "</td></tr>";
+//                     }
+//                     $("#tblEmployee tbody").html(empty);
+//                 },
+        
+//         error: function (data) {
+//             alert(JSON.stringify(data));
+//         }
+//     });
+
+//   }
+
+
+
+
+
+
+
+
+
+
+
+    // function formatDate(dateString) {
+    //     if (!dateString) return "";
+    //     var date = new Date(dateString);
+    //     var formattedDate = (date.getDate() + '/' + (Number(date.getMonth()) + 1) + '/' + date.getFullYear());
+    //     return formattedDate;
+    // }
+
+
+//     function editData(evt) {
+//     debugger;
+//         status= evt.ELEMENT_NODE;
+    
+//     itemIds = $(evt.parentNode.parentNode).find("td")[0].innerHTML;
+   
+
+//     $('#sName').val($(evt.parentNode.parentNode).find("td")[1].innerHTML);
+//    $('#sdob').val($(evt.parentNode.parentNode).find("td")[2].innerHTML);
+//     $('#sdoj').val($(evt.parentNode.parentNode).find("td")[3].innerHTML);
+  
+// }
+
+
+
+
+
+
+//  function updateListItem(itemId, listName, siteUrl, name,dob,doj, success, error) {
+//      debugger;
+//     var itemUrl = siteUrl + "/_api/web/lists/getbytitle('" + listName + "')/items(" + itemId + ")";
+    
+//     var itemData = {
+//         __metadata: { 'type': 'SP.Data.' + listName + 'ListItem' },
+//         Title: name,
+//         DOB: dob,
+//         DOJ: doj
+        
+//     };
+    
+//     $.ajax({
+//         url: itemUrl,
+//         type: "POST",
+//         contentType: "application/json;odata=verbose",
+//         data: JSON.stringify(itemData),
+//         headers: {
+//             "Accept": "application/json;odata=verbose",
+//             "X-HTTP-Method": "MERGE",
+//             "IF-MATCH": "*",
+//             "X-RequestDigest":getFormDigest()
+//         },
+//         success: function (data) {
+//             success();
+//         },
+//         error: function (data) {
+//             error();
+//             console.log(data);
+//         }
+//     });
+// }
+
+
+// function getListItemWithId(itemId, listName, siteurl, success, failure) {
+//     var url = siteurl + "/_api/web/lists/getbytitle('" + listName + "')/items?$filter=Id eq " + itemId;
+//     $.ajax({
+//         url: url,
+//         method: "GET",
+//         headers: { "Accept": "application/json; odata=verbose" },
+//         success: function (data) {
+//             if (data.d.results.length == 1) {
+//                 success(data.d.results[0]);
+//             }
+//             else {
+//                 failure("Multiple results obtained for the specified Id value");
+//             }
+//         },
+//         error: function (data) {
+//             failure(data);
+//         }
+//     });
+// }
+
+
+
+// function formatUTCDates(dateString){
+//     if (!dateString) return ""; 
+//     var date = new Date(dateString);
+  
+//    // var formattedDate = (Number(date.getMonth())+1) + '/' +date.getDate()+ '/' + date.getFullYear();
+//     var formattedDate = (date.getFullYear() + '-' +(Number(date.getMonth())+1) + '-' +date.getDate()+"T00:00:00z") ;   
+//     return formattedDate;
+// }
+ 
+
+
+//  function DeleteData(evt) {
+//     debugger;
+//     alert("Ankit");
+//     var url = _spPageContextInfo.siteAbsoluteUrl;
+//     var listName = $('#listName').val(); // Assuming you have a variable named listName
+
+//     // Retrieve the selected item ID
+//     var itemId = $('#DeleteItems').val();
+
+//     // Get the request digest value from the page
+//     var requestDigest = $('#__REQUESTDIGEST').val();
+
+//     // Construct the URL for deleting the item
+//     var itemUrl = url + "/_api/web/lists/getbytitle('" + listName + "')/items(" + itemIds + ")";
+
+//     // Make an AJAX call to delete the item
+//     $.ajax({
+//         url: itemUrl,
+//         type: "POST",
+//         contentType: "application/json;odata=verbose",
+//         headers: {
+//             "Accept": "application/json;odata=verbose",
+//             "X-HTTP-Method": "DELETE",
+//             "IF-MATCH": "*",
+//             "X-RequestDigest": getFormDigests() // Corrected function name
+//         },
+//         success: function (data) {
+//             // Item deleted successfully, perform any additional actions if needed
+//             alert("Item deleted successfully");
+//             // Optionally, refresh the list or perform any other actions after deletion
+//             // For example, you may call a function to refresh the list items
+//             RefreshItemList();
+//         },
+//         error: function (error) {
+//             // Error occurred during deletion, handle the error
+//             alert("Error deleting item");
+//             console.log(JSON.stringify(error));
+//         }
+//     });
+// }
+
+
