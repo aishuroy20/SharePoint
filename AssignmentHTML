@@ -1,0 +1,363 @@
+ <script src="https://7cxg7n.sharepoint.com/sites/EmployeeDetails/SiteAssets/Employee/JS/jquery2.js"></script>
+
+ <script src="https://7cxg7n.sharepoint.com/sites/EmployeeDetails/SiteAssets/Employee/HTML/employee.js"></script>
+
+<div id="FormDiv" style="border:2px solid black">
+
+     <span>List Name</span>
+        <span>
+            <input type="text" id="listName" />
+        </span>
+    <h1>Form</h1>
+     <table>
+
+
+
+    <tr>
+        <th><label for="name">Name:</label></th>
+        <th><input type="text" id="sName" name="name"></th>
+    </tr>
+
+     <tr>
+        <th><label for="dob">DOB:</label></th>
+        <th><input type="date" id="sdob" name="dob" onchange="calculateAge()"></th>
+    </tr>
+
+    <tr>
+        <th><label for="age">Age:</label></th>
+        <th><input type="text" id="age" name="age" readonly></th>
+    </tr>
+
+     <tr>
+        <th><label for="doj">DOJ:</label></th>
+        <th><input type="date" id="sdoj" name="doj"></th>
+    </tr>
+
+    <tr>
+    <th><label for="Skill">Skill :</label></th>
+    <td>
+        <input type="checkbox" id="java" name="java" value="Java"><label for="java">Java</label>
+        <input type="checkbox" id="html" name="html" value="HTML"><label for="html">HTML</label>
+        <input type="checkbox" id="javascript" name="javascript" value="Javascript"><label for="Javascript">JavaScript</label>
+        <input type="checkbox" id="sharepoint" name="sharepoint" value="SharePoint"><label for="sharepoint">Sharepoint</label>
+        <input type="checkbox" id="sql" name="c#" value="C#"><label for="c#">C#</label>
+        <input type="checkbox" id="css" name="css" value="Css"><label for="css">CSS</label>
+    </td>
+</tr>
+
+    <tr>
+    <th><label for="city">City:</label></th>
+        <th>
+            <select id="city" name="city" required onchange="fillStateAndCountry()">
+              <option value="1">Bihar</option>
+                <option value="3">Delhi</option>
+                  <option value="2">Chattisgarh</option>
+                    <option value="4">Goa</option>
+                </select>
+         </th>
+    </tr>
+
+    <tr>
+        <th><label for="state">State:</label></th>
+        <th><input type="text" id="state" name="state" readonly></th>
+    </tr>
+
+    <tr>
+        <th><label for="country">Country:</label></th>
+        <th><input type="text" id="country" name="country" readonly></th>
+    </tr>
+
+    <tr>
+        <th><label for="department">Department:</label></th>
+        <th>
+             <select id="department" name="department">
+            <option value="1">Civil</option>
+              <option value="2">IT</option>
+                <option value="3">Mechanical</option>
+                  <option value="4">EEE</option>
+                 
+                </select>
+        </th>
+    </tr>
+
+    <tr>
+        <th><label for="attachment">Attachment:</label></th>
+        <th><input type="file" id="file" name="attachment"></th>
+    </tr>
+
+    <tr>
+        <th></th>
+        <th><input type="button" value="Create" onclick="Create()"></th>
+     </tr>
+
+     <tr>
+        <th></th>
+        <th><input type="button" value="Update" onclick="updateOnEdit()"></th>
+    </tr>
+
+    
+
+ 
+    </table>
+</div>
+<hr>
+
+
+
+
+
+
+ <div id="secondDiv">
+       
+
+    <center>
+ <input type="button" onclick="Read()" value="Read" class="buttonsr">
+ </center>
+
+
+    <div style="width: 1100px; overflow-x: auto;">
+    <table id="tblEmployee" border="1" width="1200px">
+        <thead>
+            <tr>
+            
+                <th id="UpdateTitle">Name</th>
+                 <th id="updateDob">DOB</th>
+                  <th id="upadteAge">Age</th>
+                  <th id="updateDoj">DOJ</th>
+                     <th id="updateUser">User</th>
+                     <th id="updateManager">Manager</th>
+                      <th id="updateSkill">Skill</th>
+                       <th id="updateCity">City</th>
+                        <th id="upadteState">State</th>
+                        <th id="updateCountry">Country</th>
+                        <th id="updateDepartment">Department</th>
+                         <th id="updateAttachment">Attachment</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                       
+
+                     
+            </tr>
+     </thead>
+        <tbody></tbody>
+          </table>
+
+          
+</div>
+
+
+
+
+
+
+
+
+
+<style>
+    .buttoned{
+        padding: 8px 20px;
+    }
+      body {
+            font-family: Arial, sans-serif;
+        }
+
+        #FormDiv {
+            border: 2px solid black;
+            padding: 20px;
+            margin: 20px auto;
+            width: 50%;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+       #table1 input[type="text"], input[type="date"], select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 5px;
+        }
+
+        input[type="button"] {
+            background-color: #8BC0C3;
+            color: white;
+            
+            border: 1px solid white;
+            border-radius: 4px;
+            cursor: pointer;
+            
+        }
+
+        input[type="button"]:hover {
+            background-color: white;
+            color: black;
+            border: 1px solid black;
+        }
+
+        
+
+        h1 {
+           font-size:40px;
+           text-align:center;
+        }
+
+        action-btn {
+    background-color: #f5f5f5; /* Light shade of black */
+    background-color: #000; /* Black color for text */
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+ 
+}
+
+.action-btn:hover {
+    background-color: #e0e0e0; /* Darker shade of black on hover */
+}
+
+.buttonsr{
+    padding: 8px 50px;
+}
+
+
+     
+    </style>
+
+
+
+     
+
+
+
+
+   
+    
+
+
+
+
+
+
+
+
+<!--
+<div>
+    <h1>Form</h1>
+</div>
+<div id="FormDiv" style="border:2px solid black">
+    
+    <table id="table1">
+
+        <tr>
+            <th>List Name:</th>
+            <th><input type="text" id="listName" /></th>
+        </tr>
+
+
+        <tr>
+            <td>Name:</td>
+            <td><input type="text" id="create_Title"></td>
+        </tr>
+
+        <tr>
+            <td>DOB:</td>
+            <td><input type="date" id="create_DOB"></td>
+        </tr>
+
+        <tr>
+            <td>DOJ:</td>
+            <td><input type="date" id="create_DOJ"></td>
+        </tr>
+
+    
+        <tr>
+            <td>Skill:</td>
+            <td>C<input type="checkbox" value="c" id="create_Skill">C##<input type="checkbox" value="c##" id="create_Skill">Java<input type="checkbox" value="Java" id="create_Skill"></td>
+        </tr>
+
+        <tr>
+            <td>City:</td>
+            <td>
+                <select id="create_City">
+                    <option value="0">Bihar</option>
+                    <option>Delhi</option>
+                    <option>Chattisgarh</option>
+                    <option>Goa</option>
+
+                </select>
+            </td>
+        </tr>
+
+         <tr>
+            <td>Department:</td>
+            <td>
+                <select id="department">
+                    <option value="0">IT</option>
+                    <option>EEE</option>>
+                    <option>Mechanical</option>
+                </select>
+            </td>
+        </tr>
+
+
+          <tr>
+            <td>Attachment:</td>
+            <td><input type="file" id="create_DOB"></td>
+        </tr>
+
+            <span>
+        <select id="UpdateItems" onchange="UpdateSelectedItemChanged()" />
+    </span> 
+
+       
+        
+    </table>
+    
+</div>
+<input type="button" value="Save" onclick="saveData()"  class="buttonsr" class="action-btn">
+
+<hr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
